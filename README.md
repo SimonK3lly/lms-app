@@ -1,70 +1,50 @@
-# Getting Started with Create React App
+# Last Man Standing (LMS) - Football Prediction App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Project Overview
 
-## Available Scripts
+Last Man Standing is a sophisticated React-based web application that demonstrates my proficiency in modern web development technologies and best practices. This project showcases my ability to create a complex, user-friendly application that integrates third-party APIs, implements secure authentication, and manages real-time data.
 
-In the project directory, you can run:
+## Key Features
 
-### `npm start`
+- **User Authentication**: Implemented secure login using Firebase, supporting both email/password and Google Sign-In methods.
+- **Real-time Data Management**: Utilized Firebase Firestore for efficient, real-time data storage and retrieval.
+- **Third-party API Integration**: Seamlessly integrated the Football-Data API to fetch and display live match data.
+- **Complex State Management**: Implemented React Context API for global state management, demonstrating understanding of advanced React concepts.
+- **Responsive Design**: Created a fully responsive UI that works flawlessly on both mobile and desktop devices.
+- **Admin Functionality**: Developed an admin panel for competition management, showcasing ability to create role-based access control.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Technical Skills Demonstrated
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- **React**: Extensive use of functional components and hooks (useState, useEffect, useContext).
+- **JavaScript (ES6+)**: Utilized modern JavaScript features throughout the application.
+- **CSS**: Implemented custom styling with a focus on responsiveness and user experience.
+- **Firebase**: Leveraged Firebase for authentication and as a backend-as-a-service.
+- **API Integration**: Demonstrated ability to work with RESTful APIs and handle asynchronous operations.
+- **Git & GitHub**: Used for version control and collaboration, with implementation of CI/CD via GitHub Actions.
+- **Environment Configuration**: Properly managed environment variables for secure deployment.
 
-### `npm test`
+## Code Quality & Best Practices
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Implemented a clear and scalable project structure.
+- Used consistent coding style and naming conventions.
+- Prioritized code reusability through custom hooks and utility functions.
+- Implemented error handling and data validation throughout the application.
 
-### `npm run build`
+## Deployment
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+This application is deployed using Firebase Hosting, demonstrating my ability to take a project from development to production. The live version can be viewed at [insert your deployed app URL here].
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Running the Project Locally
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+To run this project locally:
 
-### `npm run eject`
+1. Clone the repository
+2. Install dependencies with `npm install`
+3. Set up environment variables (see `.env.example`)
+4. Run `npm start` to start the development server
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Future Enhancements
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- Implement unit and integration tests using Jest and React Testing Library.
+- Add more advanced statistics and data visualization for match predictions.
+- Implement a mobile app version using React Native.
