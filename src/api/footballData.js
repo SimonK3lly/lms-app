@@ -50,8 +50,15 @@ export const getFixturesForMatchday = async (matchday) => {
       params: { matchday }
     });
 
-    if (!response.data || !response.data.matches) {
+    if (!response.data || typeof response.data === 'string') {
       console.error('Unexpected API response:', response.data);
+      console.error('Response headers:', response.headers);
+      console.error('Response status:', response.status);
+      return [];
+    }
+
+    if (!Array.isArray(response.data.matches)) {
+      console.error('API response does not contain matches array:', response.data);
       return [];
     }
 
@@ -65,6 +72,7 @@ export const getFixturesForMatchday = async (matchday) => {
     return sortedFixtures;
   } catch (error) {
     console.error('Error fetching fixtures:', error.response ? error.response.data : error.message);
+    console.error('Error details:', error);
     return [];
   }
 };
