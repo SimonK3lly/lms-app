@@ -32,6 +32,8 @@ function Competition() {
           deadlineDate.setDate(deadlineDate.getDate() - 1); // Set to previous day
           deadlineDate.setHours(22, 0, 0, 0); // Set to 10 PM
           setDeadline(deadlineDate);
+        } else {
+          setDeadline(null);
         }
 
         // Fetch participants

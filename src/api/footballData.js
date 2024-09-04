@@ -43,17 +43,20 @@ export const getFixturesForMatchday = async (matchday) => {
     const leagueDoc = await getDoc(doc(db, 'leagueData', LEAGUE_DOC_ID));
     
     if (leagueDoc.exists() && leagueDoc.data().fixtures && leagueDoc.data().fixtures[matchday]) {
-      // If fixtures for this matchday exist in the database, use them
       return leagueDoc.data().fixtures[matchday];
     }
 
-    // If fixtures don't exist, fetch from API
     const response = await api.get(`/competitions/PL/matches`, {
       params: { matchday }
     });
+
+    if (!response.data || !response.data.matches) {
+      console.error('Unexpected API response:', response.data);
+      return [];
+    }
+
     const sortedFixtures = response.data.matches.sort((a, b) => new Date(a.utcDate) - new Date(b.utcDate));
 
-    // Update the database
     await setDoc(doc(db, 'leagueData', LEAGUE_DOC_ID), {
       [`fixtures.${matchday}`]: sortedFixtures,
       lastUpdated: Date.now()
@@ -62,6 +65,6 @@ export const getFixturesForMatchday = async (matchday) => {
     return sortedFixtures;
   } catch (error) {
     console.error('Error fetching fixtures:', error.response ? error.response.data : error.message);
-    throw error;
+    return [];
   }
 };
