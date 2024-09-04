@@ -1,51 +1,51 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { db, auth } from '../firebase';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { doc, getDoc, collection, getDocs } from 'firebase/firestore';
 import '../styles/Competition.css';
+import { getFixturesForMatchday, getCurrentMatchday } from '../api/footballData';
 
 function Competition() {
   const { id } = useParams();
   const [competition, setCompetition] = useState(null);
-  const [selection, setSelection] = useState('');
   const [deadline, setDeadline] = useState(null);
+  const [fixtures, setFixtures] = useState([]);
+  const [participants, setParticipants] = useState([]);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
-    const fetchCompetition = async () => {
+    const fetchCompetitionAndFixtures = async () => {
       const docRef = doc(db, 'competitions', id);
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
         const data = docSnap.data();
         setCompetition(data);
-        const gameweekRef = doc(db, `competitions/${id}/gameweeks/${data.currentGameweek}`);
-        const gameweekSnap = await getDoc(gameweekRef);
-        if (gameweekSnap.exists()) {
-          setDeadline(gameweekSnap.data().deadline.toDate());
+        setIsAdmin(auth.currentUser && auth.currentUser.uid === data.adminId);
+        const currentGameweek = await getCurrentMatchday();
+        const fixturesData = await getFixturesForMatchday(currentGameweek);
+        setFixtures(fixturesData);
+
+        // Calculate deadline
+        if (fixturesData.length > 0) {
+          const firstFixtureDate = new Date(fixturesData[0].utcDate);
+          const deadlineDate = new Date(firstFixtureDate);
+          deadlineDate.setDate(deadlineDate.getDate() - 1); // Set to previous day
+          deadlineDate.setHours(22, 0, 0, 0); // Set to 10 PM
+          setDeadline(deadlineDate);
         }
+
+        // Fetch participants
+        const participantsRef = collection(db, `competitions/${id}/participants`);
+        const participantsSnapshot = await getDocs(participantsRef);
+        const participantsData = participantsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        setParticipants(participantsData);
       } else {
         console.log('No such document!');
       }
     };
 
-    fetchCompetition();
+    fetchCompetitionAndFixtures();
   }, [id]);
-
-  const handleSelection = async () => {
-    if (new Date() > deadline) {
-      alert('Deadline has passed. You cannot make or change your selection.');
-      return;
-    }
-
-    try {
-      await setDoc(doc(db, `competitions/${id}/participants/${auth.currentUser.uid}/selections/${competition.currentGameweek}`), {
-        teamId: selection,
-        result: null,
-      });
-      alert('Selection submitted successfully!');
-    } catch (e) {
-      console.error('Error submitting selection: ', e);
-    }
-  };
 
   if (!competition) return <div className="page-container"><div className="content-container">Loading...</div></div>;
 
@@ -53,16 +53,44 @@ function Competition() {
     <div className="page-container">
       <div className="content-container">
         <h1 className="page-title">{competition.name} - Gameweek {competition.currentGameweek}</h1>
-        <p className="competition-details">Deadline: {deadline ? deadline.toLocaleString() : 'Loading...'}</p>
-        <select 
-          className="form-input"
-          onChange={(e) => setSelection(e.target.value)} 
-          value={selection}
-        >
-          <option value="">Select a team</option>
-          {/* Populate with teams, ensuring previously selected teams are not available */}
-        </select>
-        <button className="submit-button" onClick={handleSelection}>Submit Selection</button>
+        <p className="competition-details">Gameweek {competition.currentGameweek} Deadline: {deadline ? deadline.toLocaleString() : 'Loading...'}</p>
+        
+        {isAdmin && (
+          <div className="admin-info">
+            <p>Join Code: {competition.joinCode}</p>
+            <p>Join Link: {`${window.location.origin}/join/${competition.joinCode}`}</p>
+          </div>
+        )}
+
+        <h2>Fixtures</h2>
+        <div className="fixtures-container">
+          <ul className="fixtures-list">
+            {fixtures.map((fixture) => (
+              <li key={fixture.id} className="fixture-item">
+                <div className="team home-team">
+                  <img src={fixture.homeTeam.crest} alt={fixture.homeTeam.name} className="team-logo" />
+                  <span className="team-name">{fixture.homeTeam.name}</span>
+                </div>
+                <span className="vs">vs</span>
+                <div className="team away-team">
+                  <img src={fixture.awayTeam.crest} alt={fixture.awayTeam.name} className="team-logo" />
+                  <span className="team-name">{fixture.awayTeam.name}</span>
+                </div>
+                <span className="fixture-date">{new Date(fixture.utcDate).toLocaleString()}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <h2>Participants ({participants.length})</h2>
+        <ul className="participants-list">
+          {participants.map((participant) => (
+            <li key={participant.id} className="participant-item">
+              <span className="participant-name">{participant.name}</span>
+              {isAdmin && <span className="participant-email">{participant.email}</span>}
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );

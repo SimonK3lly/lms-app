@@ -22,7 +22,8 @@ function Nav() {
       <div className="nav-container">
         <Link to="/" className="nav-logo">LMS</Link>
         <div className="nav-links">
-          <Link to="/competition" className="nav-link">Competition</Link>
+          <Link to="/join" className="nav-link">Join Competition</Link>
+          <Link to="/competition" className="nav-link">View Competition</Link>
           {currentUser && <Link to="/admin" className="nav-link">Admin</Link>}
         </div>
         <div className="nav-auth">
