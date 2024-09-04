@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { db, auth } from '../firebase';
 import { doc, getDoc, collection, getDocs } from 'firebase/firestore';
 import '../styles/Competition.css';
-import { getFixturesForMatchday, getCurrentMatchday } from '../api/footballData';
+import { getFixturesForMatchday, getCurrentMatchday, cacheFixtures } from '../api/footballData';
 
 function Competition() {
   const { id } = useParams();
@@ -22,18 +22,23 @@ function Competition() {
         setCompetition(data);
         setIsAdmin(auth.currentUser && auth.currentUser.uid === data.adminId);
         const currentGameweek = await getCurrentMatchday();
-        const fixturesData = await getFixturesForMatchday(currentGameweek);
-        setFixtures(fixturesData);
+        if (currentGameweek) {
+          const fixturesData = await getFixturesForMatchday(currentGameweek);
+          setFixtures(fixturesData);
+          
+          // Cache the fixtures data
+          await cacheFixtures(currentGameweek, fixturesData);
 
-        // Calculate deadline
-        if (fixturesData.length > 0) {
-          const firstFixtureDate = new Date(fixturesData[0].utcDate);
-          const deadlineDate = new Date(firstFixtureDate);
-          deadlineDate.setDate(deadlineDate.getDate() - 1); // Set to previous day
-          deadlineDate.setHours(22, 0, 0, 0); // Set to 10 PM
-          setDeadline(deadlineDate);
-        } else {
-          setDeadline(null);
+          // Calculate deadline
+          if (fixturesData.length > 0) {
+            const firstFixtureDate = new Date(fixturesData[0].utcDate);
+            const deadlineDate = new Date(firstFixtureDate);
+            deadlineDate.setDate(deadlineDate.getDate() - 1);
+            deadlineDate.setHours(22, 0, 0, 0);
+            setDeadline(deadlineDate);
+          } else {
+            setDeadline(null);
+          }
         }
 
         // Fetch participants

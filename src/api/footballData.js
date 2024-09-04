@@ -3,7 +3,7 @@ import { db } from '../firebase';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 
 const API_KEY = process.env.REACT_APP_FOOTBALL_DATA_API_KEY;
-const BASE_URL = 'https://api.football-data.org/v4';
+const BASE_URL = '/v4'; // This will be proxied through your server
 
 const api = axios.create({
   baseURL: BASE_URL,
@@ -17,15 +17,12 @@ export const getCurrentMatchday = async () => {
     const leagueDoc = await getDoc(doc(db, 'leagueData', LEAGUE_DOC_ID));
     
     if (leagueDoc.exists() && leagueDoc.data().lastUpdated > Date.now() - 3600000) {
-      // If data exists and is less than 1 hour old, use it
       return leagueDoc.data().currentMatchday;
     }
 
-    // If data doesn't exist or is old, fetch from API
     const response = await api.get('/competitions/PL');
     const currentMatchday = response.data.currentSeason.currentMatchday;
 
-    // Update the database
     await setDoc(doc(db, 'leagueData', LEAGUE_DOC_ID), {
       currentMatchday,
       lastUpdated: Date.now()
@@ -33,45 +30,42 @@ export const getCurrentMatchday = async () => {
 
     return currentMatchday;
   } catch (error) {
-    console.error('Error fetching current matchday:', error.response ? error.response.data : error.message);
-    throw error;
+    console.error('Error fetching current matchday:', error.message);
+    return null;
   }
 };
 
 export const getFixturesForMatchday = async (matchday) => {
   try {
-    const leagueDoc = await getDoc(doc(db, 'leagueData', LEAGUE_DOC_ID));
-    
-    if (leagueDoc.exists() && leagueDoc.data().fixtures && leagueDoc.data().fixtures[matchday]) {
-      return leagueDoc.data().fixtures[matchday];
-    }
-
     console.log('Fetching fixtures from API for matchday:', matchday);
-    console.log('API Key:', API_KEY ? 'Set' : 'Not set');
-    console.log('Base URL:', BASE_URL);
-
-    const response = await api.get('/competitions/PL/matches', {
+    
+    const response = await api.get(`/competitions/PL/matches`, {
       params: { matchday }
     });
-
-    console.log('API Response:', response);
-
-    if (!response.data || !Array.isArray(response.data.matches)) {
-      console.error('Unexpected API response structure:', response.data);
-      return [];
-    }
-
-    const sortedFixtures = response.data.matches.sort((a, b) => new Date(a.utcDate) - new Date(b.utcDate));
-
-    await setDoc(doc(db, 'leagueData', LEAGUE_DOC_ID), {
-      [`fixtures.${matchday}`]: sortedFixtures,
-      lastUpdated: Date.now()
-    }, { merge: true });
-
-    return sortedFixtures;
+    return response.data.matches;
   } catch (error) {
-    console.error('Error fetching fixtures:', error.response ? error.response.data : error.message);
+    console.error('Error fetching fixtures:', error.message);
     console.error('Error details:', error);
+    
+    // Fallback to Firestore cache
+    try {
+      const fixturesDoc = await getDoc(doc(db, 'fixtures', `matchday_${matchday}`));
+      if (fixturesDoc.exists()) {
+        console.log('Using cached fixtures data');
+        return fixturesDoc.data().matches;
+      }
+    } catch (cacheError) {
+      console.error('Error fetching cached fixtures:', cacheError);
+    }
+    
     return [];
+  }
+};
+
+export const cacheFixtures = async (matchday, fixtures) => {
+  try {
+    await setDoc(doc(db, 'fixtures', `matchday_${matchday}`), { matches: fixtures });
+  } catch (error) {
+    console.error('Error caching fixtures:', error);
   }
 };
