@@ -46,19 +46,23 @@ export const getFixturesForMatchday = async (matchday) => {
       return leagueDoc.data().fixtures[matchday];
     }
 
+    console.log('Fetching fixtures from API for matchday:', matchday);
+    console.log('API Key:', API_KEY);
+    console.log('Base URL:', BASE_URL);
+
     const response = await api.get(`/competitions/PL/matches`, {
       params: { matchday }
     });
 
-    if (!response.data || typeof response.data === 'string') {
-      console.error('Unexpected API response:', response.data);
-      console.error('Response headers:', response.headers);
-      console.error('Response status:', response.status);
+    console.log('API Response:', response);
+
+    if (response.headers['content-type'].includes('text/html')) {
+      console.error('Received HTML response instead of JSON');
       return [];
     }
 
-    if (!Array.isArray(response.data.matches)) {
-      console.error('API response does not contain matches array:', response.data);
+    if (!response.data || !Array.isArray(response.data.matches)) {
+      console.error('Unexpected API response structure:', response.data);
       return [];
     }
 
