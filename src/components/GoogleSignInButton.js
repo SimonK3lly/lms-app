@@ -5,19 +5,7 @@ import { useNavigate } from 'react-router-dom';
 const GoogleSignInButton = () => {
   const buttonRef = useRef(null);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (window.google && buttonRef.current) {
-      window.google.accounts.id.renderButton(buttonRef.current, {
-        type: 'standard',
-        theme: 'outline',
-        size: 'large',
-        text: 'signin_with',
-        shape: 'rectangular',
-        logo_alignment: 'left',
-      });
-    }
-  }, []);
+  const isInitialized = useRef(false);
 
   const handleCredentialResponse = useCallback(async (response) => {
     if (response.credential) {
@@ -35,15 +23,27 @@ const GoogleSignInButton = () => {
   }, [navigate]);
 
   useEffect(() => {
-    if (window.google) {
+    if (window.google && !isInitialized.current) {
       window.google.accounts.id.initialize({
         client_id: '811664410630-7fg7b4scipk7d8pdbo5kgaoo1rnqgnt7.apps.googleusercontent.com',
         callback: handleCredentialResponse,
       });
-    } else {
-      console.error('Google Sign-In SDK not loaded');
+      isInitialized.current = true;
     }
   }, [handleCredentialResponse]);
+
+  useEffect(() => {
+    if (window.google && buttonRef.current && isInitialized.current) {
+      window.google.accounts.id.renderButton(buttonRef.current, {
+        type: 'standard',
+        theme: 'outline',
+        size: 'large',
+        text: 'signin_with',
+        shape: 'rectangular',
+        logo_alignment: 'left',
+      });
+    }
+  }, []);
 
   return <div ref={buttonRef}></div>;
 };
