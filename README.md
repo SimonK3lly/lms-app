@@ -32,7 +32,7 @@ Last Man Standing is a sophisticated React-based web application that demonstrat
 
 ## Deployment
 
-This application is deployed using Firebase Hosting, demonstrating my ability to take a project from development to production. The live version can be viewed at [insert your deployed app URL here].
+This application is deployed using Firebase Hosting. The live version can be viewed at https://lms-app-2f048.web.app/.
 
 ## Running the Project Locally
 
