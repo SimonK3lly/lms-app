@@ -1,20 +1,27 @@
-// src/components/Competition.js
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { db } from '../firebase';
-import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { db, auth } from '../firebase';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
+import '../styles/Competition.css';
 
 function Competition() {
   const { id } = useParams();
   const [competition, setCompetition] = useState(null);
   const [selection, setSelection] = useState('');
+  const [deadline, setDeadline] = useState(null);
 
   useEffect(() => {
     const fetchCompetition = async () => {
       const docRef = doc(db, 'competitions', id);
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
-        setCompetition(docSnap.data());
+        const data = docSnap.data();
+        setCompetition(data);
+        const gameweekRef = doc(db, `competitions/${id}/gameweeks/${data.currentGameweek}`);
+        const gameweekSnap = await getDoc(gameweekRef);
+        if (gameweekSnap.exists()) {
+          setDeadline(gameweekSnap.data().deadline.toDate());
+        }
       } else {
         console.log('No such document!');
       }
@@ -24,27 +31,39 @@ function Competition() {
   }, [id]);
 
   const handleSelection = async () => {
-    const docRef = doc(db, 'competitions', id);
-    await updateDoc(docRef, {
-      selections: [...competition.selections, selection],
-    });
+    if (new Date() > deadline) {
+      alert('Deadline has passed. You cannot make or change your selection.');
+      return;
+    }
+
+    try {
+      await setDoc(doc(db, `competitions/${id}/participants/${auth.currentUser.uid}/selections/${competition.currentGameweek}`), {
+        teamId: selection,
+        result: null,
+      });
+      alert('Selection submitted successfully!');
+    } catch (e) {
+      console.error('Error submitting selection: ', e);
+    }
   };
 
+  if (!competition) return <div className="page-container"><div className="content-container">Loading...</div></div>;
+
   return (
-    <div>
-      <h1>Competition {id}</h1>
-      {competition && (
-        <>
-          <h2>{competition.name}</h2>
-          <select onChange={(e) => setSelection(e.target.value)} value={selection}>
-            <option value="">Select a team</option>
-            {/* Replace with dynamic options */}
-            <option value="team1">Team 1</option>
-            <option value="team2">Team 2</option>
-          </select>
-          <button onClick={handleSelection}>Submit</button>
-        </>
-      )}
+    <div className="page-container">
+      <div className="content-container">
+        <h1 className="page-title">{competition.name} - Gameweek {competition.currentGameweek}</h1>
+        <p className="competition-details">Deadline: {deadline ? deadline.toLocaleString() : 'Loading...'}</p>
+        <select 
+          className="form-input"
+          onChange={(e) => setSelection(e.target.value)} 
+          value={selection}
+        >
+          <option value="">Select a team</option>
+          {/* Populate with teams, ensuring previously selected teams are not available */}
+        </select>
+        <button className="submit-button" onClick={handleSelection}>Submit Selection</button>
+      </div>
     </div>
   );
 }

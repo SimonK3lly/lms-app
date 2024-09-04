@@ -8,7 +8,7 @@ function Home() {
       <h1>Welcome to Last Man Standing</h1>
       <Link to="/admin">Organize a Competition</Link>
       <br />
-      <Link to="/competition/1">Join Competition</Link> {/* Replace with dynamic competition list */}
+      <Link to="/competition">Join Competition</Link>
     </div>
   );
 }

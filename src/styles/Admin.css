@@ -1,0 +1,104 @@
+.admin-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #1a1a1a;
+    color: #ffffff;
+    padding: 2rem;
+    box-sizing: border-box;
+  }
+  
+  .admin-content {
+    background-color: #2a2a2a;
+    padding: 2rem;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 500px;
+  }
+  
+  .admin-title {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+  
+  .admin-form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .form-group {
+    margin-bottom: 1rem;
+    width: 100%;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+  }
+  
+  .admin-input {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #3a3a3a;
+    border: 1px solid #4a4a4a;
+    color: #ffffff;
+    border-radius: 4px;
+    font-size: 1rem;
+    box-sizing: border-box;
+  }
+  
+  .admin-input:focus {
+    outline: none;
+    border-color: #4CAF50;
+  }
+  
+  .admin-button {
+    width: 100%;
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 1rem;
+    margin-top: 1rem;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .admin-button:hover {
+    background-color: #45a049;
+  }
+
+  .admin-competitions {
+    margin-top: 2rem;
+    border-top: 1px solid #4a4a4a;
+    padding-top: 2rem;
+  }
+  
+  .competition-list {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .competition-item {
+    background-color: #3a3a3a;
+    border-radius: 4px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .competition-item h3 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+  }
+  
+  .competition-item p {
+    margin: 0.25rem 0;
+  }
