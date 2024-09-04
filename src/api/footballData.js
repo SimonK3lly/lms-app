@@ -43,7 +43,7 @@ export const getFixturesForMatchday = async (matchday) => {
     return response.data.matches;
   } catch (error) {
     console.error('Error fetching fixtures:', error.message);
-    console.error('Error details:', error);
+    console.error('Full error:', JSON.stringify(error, null, 2));
     
     // Fallback to Firestore cache
     try {
