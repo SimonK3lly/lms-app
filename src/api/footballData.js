@@ -2,7 +2,6 @@ import axios from 'axios';
 import { db } from '../firebase';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 
-const API_KEY = process.env.REACT_APP_FOOTBALL_DATA_API_KEY;
 const BASE_URL = '/api';
 
 const api = axios.create({
