@@ -33,11 +33,11 @@ const GoogleSignInButton = () => {
       alert('Failed to sign in with Google. Please try again.');
     }
   }, [navigate]);
-  
+
   useEffect(() => {
     if (window.google) {
       window.google.accounts.id.initialize({
-        client_id: '993789287488-5en6bubbu88cm3ahkj4g9mh96fh9afls.apps.googleusercontent.com',
+        client_id: '811664410630-7fg7b4scipk7d8pdbo5kgaoo1rnqgnt7.apps.googleusercontent.com',
         callback: handleCredentialResponse,
       });
     } else {
