@@ -3,7 +3,7 @@ import { db } from '../firebase';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 
 const API_KEY = process.env.REACT_APP_FOOTBALL_DATA_API_KEY;
-const BASE_URL = '/v4';
+const BASE_URL = 'https://api.football-data.org/v4';
 
 const api = axios.create({
   baseURL: BASE_URL,
@@ -47,19 +47,14 @@ export const getFixturesForMatchday = async (matchday) => {
     }
 
     console.log('Fetching fixtures from API for matchday:', matchday);
-    console.log('API Key:', API_KEY);
+    console.log('API Key:', API_KEY ? 'Set' : 'Not set');
     console.log('Base URL:', BASE_URL);
 
-    const response = await api.get(`/competitions/PL/matches`, {
+    const response = await api.get('/competitions/PL/matches', {
       params: { matchday }
     });
 
     console.log('API Response:', response);
-
-    if (response.headers['content-type'].includes('text/html')) {
-      console.error('Received HTML response instead of JSON');
-      return [];
-    }
 
     if (!response.data || !Array.isArray(response.data.matches)) {
       console.error('Unexpected API response structure:', response.data);
