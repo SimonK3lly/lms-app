@@ -1,5 +1,6 @@
-import React, { useEffect, useRef, useCallback } from 'react';
-import { signInWithGoogle } from '../firebase';
+import React, { useEffect, useRef } from 'react';
+import { auth } from '../firebase';
+import { signInWithCredential, GoogleAuthProvider } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 
 const GoogleSignInButton = () => {
@@ -7,7 +8,28 @@ const GoogleSignInButton = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (window.google && buttonRef.current) {
+    const handleCredentialResponse = async (response) => {
+      if (response.credential) {
+        try {
+          const credential = GoogleAuthProvider.credential(response.credential);
+          await signInWithCredential(auth, credential);
+          navigate('/admin');
+        } catch (error) {
+          console.error('Error signing in with Google', error);
+          alert('Failed to sign in with Google. Please try again.');
+        }
+      } else {
+        console.error('No credential received from Google Sign-In');
+        alert('Failed to sign in with Google. Please try again.');
+      }
+    };
+
+    if (window.google) {
+      window.google.accounts.id.initialize({
+        client_id: '811664410630-7fg7b4scipk7d8pdbo5kgaoo1rnqgnt7.apps.googleusercontent.com',
+        callback: handleCredentialResponse,
+      });
+
       window.google.accounts.id.renderButton(buttonRef.current, {
         type: 'standard',
         theme: 'outline',
@@ -16,34 +38,10 @@ const GoogleSignInButton = () => {
         shape: 'rectangular',
         logo_alignment: 'left',
       });
-    }
-  }, []);
-
-  const handleCredentialResponse = useCallback(async (response) => {
-    if (response.credential) {
-      try {
-        await signInWithGoogle(response.credential);
-        navigate('/admin');
-      } catch (error) {
-        console.error('Error signing in with Google', error);
-        alert('Failed to sign in with Google. Please try again.');
-      }
-    } else {
-      console.error('No credential received from Google Sign-In');
-      alert('Failed to sign in with Google. Please try again.');
-    }
-  }, [navigate]);
-  
-  useEffect(() => {
-    if (window.google) {
-      window.google.accounts.id.initialize({
-        client_id: '811664410630-7fg7b4scipk7d8pdbo5kgaoo1rnqgnt7.apps.googleusercontent.com',
-        callback: handleCredentialResponse,
-      });
     } else {
       console.error('Google Sign-In SDK not loaded');
     }
-  }, [handleCredentialResponse]);
+  }, [navigate]);
 
   return <div ref={buttonRef}></div>;
 };
