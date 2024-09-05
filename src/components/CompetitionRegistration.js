@@ -15,6 +15,13 @@ function CompetitionRegistration() {
 
   useEffect(() => {
     const fetchCompetitionDetails = async () => {
+      if (!joinCode) {
+        console.error('Join code is undefined');
+        alert('Invalid join code');
+        navigate('/');
+        return;
+      }
+
       try {
         const competitionsRef = collection(db, 'competitions');
         const q = query(competitionsRef, where("joinCode", "==", joinCode));
