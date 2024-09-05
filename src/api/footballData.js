@@ -21,6 +21,11 @@ export const getCurrentMatchday = async () => {
     const response = await api.get('/competitions/PL');
     console.log('API Response:', response.data); // Log the entire response
 
+    if (typeof response.data === 'string' && response.data.startsWith('<!doctype html>')) {
+      console.error('Received HTML instead of JSON. API endpoint might be incorrect or returning an error page.');
+      return null;
+    }
+
     if (!response.data || !response.data.currentSeason) {
       console.error('Unexpected API response structure:', response.data);
       return null;

@@ -16,15 +16,21 @@ exports.handler = async function(event, context) {
       }
     });
 
+    console.log('Proxy response:', response.data);
+
     return {
       statusCode: 200,
       body: JSON.stringify(response.data)
     };
   } catch (error) {
     console.error('Proxy error:', error.response ? error.response.data : error.message);
+    console.error('Full error object:', JSON.stringify(error, null, 2));
     return {
       statusCode: error.response?.status || 500,
-      body: JSON.stringify(error.response?.data || {})
+      body: JSON.stringify({
+        error: error.message,
+        details: error.response?.data || {}
+      })
     };
   }
 };
