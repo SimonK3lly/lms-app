@@ -2,21 +2,45 @@ import React, { useState } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { db } from '../firebase';
 import { doc, setDoc, collection } from 'firebase/firestore';
+import emailjs from '@emailjs/browser';
 import '../styles/CompetitionRegistration.css';
 
 function CompetitionRegistration() {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const { id } = useParams();
+  const { competitionId } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
   const competitionName = location.state?.competitionName || 'Competition';
+
+  const sendWelcomeEmail = async (to_email, to_name, competition_name, competition_link, selection_link) => {
+    const templateParams = {
+      to_email,
+      to_name,
+      competition_name,
+      competition_link,
+      selection_link
+    };
+
+    try {
+      const result = await emailjs.send(
+        process.env.REACT_APP_EMAILJS_SERVICE_ID,
+        process.env.REACT_APP_EMAILJS_TEMPLATE_ID,
+        templateParams,
+        process.env.REACT_APP_EMAILJS_PUBLIC_KEY
+      );
+      console.log('Welcome email sent successfully:', result.text);
+    } catch (error) {
+      console.error('Error sending welcome email:', error);
+      throw error;
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const participantRef = doc(collection(db, `competitions/${id}/participants`));
-      const participantId = participantRef.id; // Generate a unique ID
+      const participantRef = doc(collection(db, `competitions/${competitionId}/participants`));
+      const participantId = participantRef.id;
       await setDoc(participantRef, {
         name,
         email,
@@ -24,12 +48,14 @@ function CompetitionRegistration() {
         participantId: participantId
       });
 
-      // Send email with the selection link (you'll need to implement email sending)
-      const selectionLink = `${window.location.origin}/selection/${id}/${participantId}`;
-      console.log('Selection link:', selectionLink); // For testing purposes
+      const competitionLink = `${window.location.origin}/competition/${competitionId}`;
+      const selectionLink = `${window.location.origin}/selection/${competitionId}/${participantId}`;
 
-      alert('Successfully joined the competition! Check your email for the selection link.');
-      navigate(`/competition/${id}`);
+      // Send welcome email
+      await sendWelcomeEmail(email, name, competitionName, competitionLink, selectionLink);
+
+      alert('Successfully joined the competition! Check your email for important links.');
+      navigate(`/competition/${competitionId}`);
     } catch (e) {
       console.error('Error registering for competition: ', e);
       alert('Error registering for competition. Please try again.');
