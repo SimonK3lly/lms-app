@@ -16,13 +16,19 @@ function CompetitionRegistration() {
     e.preventDefault();
     try {
       const participantRef = doc(collection(db, `competitions/${id}/participants`));
+      const participantId = participantRef.id; // Generate a unique ID
       await setDoc(participantRef, {
         name,
         email,
         isActive: true,
+        participantId: participantId
       });
 
-      alert('Successfully joined the competition!');
+      // Send email with the selection link (you'll need to implement email sending)
+      const selectionLink = `${window.location.origin}/selection/${id}/${participantId}`;
+      console.log('Selection link:', selectionLink); // For testing purposes
+
+      alert('Successfully joined the competition! Check your email for the selection link.');
       navigate(`/competition/${id}`);
     } catch (e) {
       console.error('Error registering for competition: ', e);

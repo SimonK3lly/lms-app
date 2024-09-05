@@ -11,6 +11,7 @@ import SignUp from './components/SignUp';
 import { AuthProvider } from './contexts/AuthContext';
 import JoinCompetition from './components/JoinCompetition';
 import CompetitionRegistration from './components/CompetitionRegistration';
+import SelectionPage from './components/SelectionPage';
 
 function App() {
   return (
@@ -23,10 +24,11 @@ function App() {
             <Route path="/signup" element={<SignUp />} />
             <Route path="/login" element={<Login />} />
             <Route path="/competition" element={<CompetitionEntry />} />
-            <Route path="/competition/:id" element={<Competition />} />
+            <Route path="/competition/:competitionId" element={<Competition />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="/join" element={<JoinCompetition />} />
-            <Route path="/join/:id" element={<CompetitionRegistration />} />
+            <Route path="/join/:competitionId" element={<CompetitionRegistration />} />
+            <Route path="/selection/:competitionId/:userId" element={<SelectionPage />} />
           </Routes>
         </Layout>
       </AuthProvider>

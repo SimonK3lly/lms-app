@@ -6,7 +6,7 @@ import '../styles/Competition.css';
 import { getFixturesForMatchday, getCurrentMatchday } from '../api/footballData';
 
 function Competition() {
-  const { id } = useParams();
+  const { competitionId } = useParams();
   const [competition, setCompetition] = useState(null);
   const [deadline, setDeadline] = useState(null);
   const [fixtures, setFixtures] = useState([]);
@@ -15,7 +15,7 @@ function Competition() {
 
   useEffect(() => {
     const fetchCompetitionAndFixtures = async () => {
-      const docRef = doc(db, 'competitions', id);
+      const docRef = doc(db, 'competitions', competitionId);
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
         const data = docSnap.data();
@@ -39,7 +39,7 @@ function Competition() {
         }
 
         // Fetch participants
-        const participantsRef = collection(db, `competitions/${id}/participants`);
+        const participantsRef = collection(db, `competitions/${competitionId}/participants`);
         const participantsSnapshot = await getDocs(participantsRef);
         const participantsData = participantsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         setParticipants(participantsData);
@@ -49,7 +49,7 @@ function Competition() {
     };
 
     fetchCompetitionAndFixtures();
-  }, [id]);
+  }, [competitionId]);
 
   if (!competition) return <div className="page-container"><div className="content-container">Loading...</div></div>;
 
@@ -91,7 +91,11 @@ function Competition() {
           {participants.map((participant) => (
             <li key={participant.id} className="participant-item">
               <span className="participant-name">{participant.name}</span>
-              {isAdmin && <span className="participant-email">{participant.email}</span>}
+              {isAdmin && (
+                <span className="participant-email">
+                  {participant.email} (ID: {participant.id})
+                </span>
+              )}
             </li>
           ))}
         </ul>
