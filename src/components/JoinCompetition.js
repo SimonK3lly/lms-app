@@ -21,9 +21,6 @@ function JoinCompetition() {
       }
 
       const competitionDoc = querySnapshot.docs[0];
-      const competitionId = competitionDoc.id;
-      const competitionName = competitionDoc.data().name;
-
       navigate(`/join/${joinCode}`);
     } catch (e) {
       console.error('Error joining competition: ', e);
