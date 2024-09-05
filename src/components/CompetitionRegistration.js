@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { db } from '../firebase';
 import { doc, setDoc, collection } from 'firebase/firestore';
@@ -6,12 +6,38 @@ import emailjs from '@emailjs/browser';
 import '../styles/CompetitionRegistration.css';
 
 function CompetitionRegistration() {
-  const { competitionId } = useParams();
+  const { joinCode } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const competitionName = location.state?.competitionName || 'Competition';
+  const [competitionId, setCompetitionId] = useState('');
+  const [competitionName, setCompetitionName] = useState('');
+
+  useEffect(() => {
+    const fetchCompetitionDetails = async () => {
+      try {
+        const competitionsRef = collection(db, 'competitions');
+        const q = query(competitionsRef, where("joinCode", "==", joinCode));
+        const querySnapshot = await getDocs(q);
+
+        if (!querySnapshot.empty) {
+          const competitionDoc = querySnapshot.docs[0];
+          setCompetitionId(competitionDoc.id);
+          setCompetitionName(competitionDoc.data().name);
+        } else {
+          alert('Invalid join code');
+          navigate('/');
+        }
+      } catch (e) {
+        console.error('Error fetching competition details:', e);
+        alert('Error fetching competition details. Please try again.');
+        navigate('/');
+      }
+    };
+
+    fetchCompetitionDetails();
+  }, [joinCode, navigate]);
 
   const sendWelcomeEmail = async (to_email, to_name, competition_name, competition_link, selection_link) => {
     const templateParams = {

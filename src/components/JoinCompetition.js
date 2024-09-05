@@ -24,7 +24,7 @@ function JoinCompetition() {
       const competitionId = competitionDoc.id;
       const competitionName = competitionDoc.data().name;
 
-      navigate(`/join/${competitionId}`, { state: { competitionName, competitionId } });
+      navigate(`/join/${joinCode}`, { state: { competitionName, competitionId } });
     } catch (e) {
       console.error('Error joining competition: ', e);
       alert('Error joining competition. Please try again.');
