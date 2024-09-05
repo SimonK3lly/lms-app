@@ -35,6 +35,15 @@ export const getCurrentMatchday = async () => {
 
 export const getFixturesForMatchday = async (matchday) => {
   try {
+    // In development, always use cached data if available
+    if (process.env.NODE_ENV === 'development') {
+      const fixturesDoc = await getDoc(doc(db, 'fixtures', `matchday_${matchday}`));
+      if (fixturesDoc.exists()) {
+        console.log('Using cached fixtures data for development');
+        return fixturesDoc.data().matches;
+      }
+    }
+
     console.log('Fetching fixtures from API for matchday:', matchday);
     
     const response = await api.get(`/competitions/PL/matches`, {

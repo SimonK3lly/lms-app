@@ -32,7 +32,7 @@ Last Man Standing is a sophisticated React-based web application that demonstrat
 
 ## Deployment
 
-This application is deployed using Firebase Hosting. The live version can be viewed at https://lms-app-2f048.web.app/.
+This application is deployed using Netlify. The live version can be viewed at https://main--superlative-muffin-918c0f.netlify.app/.
 
 ## Running the Project Locally
 
@@ -48,3 +48,9 @@ To run this project locally:
 - Implement unit and integration tests using Jest and React Testing Library.
 - Add more advanced statistics and data visualization for match predictions.
 - Implement a mobile app version using React Native.
+
+## Development Notes
+
+When running the application locally, it will use cached fixture data from Firestore instead of making live API calls. This is to simplify the local development setup and avoid potential CORS issues. The live API calls will work correctly in the deployed Netlify environment.
+
+Note: Local development will use cached data and may not reflect the most recent fixtures.
