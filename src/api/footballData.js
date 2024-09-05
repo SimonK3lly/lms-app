@@ -2,7 +2,7 @@ import axios from 'axios';
 import { db } from '../firebase';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 
-const BASE_URL = '/api';
+const BASE_URL = '/.netlify/functions/football-data-proxy';
 
 const api = axios.create({
   baseURL: BASE_URL

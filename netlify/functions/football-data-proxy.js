@@ -7,16 +7,20 @@ exports.handler = async function(event, context) {
   const BASE_URL = 'https://api.football-data.org/v4';
 
   try {
+    const path = event.path.replace('/.netlify/functions/football-data-proxy', '');
+    console.log('Making request to:', `${BASE_URL}${path}`);
     const response = await axios({
       method: event.httpMethod,
-      url: `${BASE_URL}${event.path.replace('/api', '')}`,
+      url: `${BASE_URL}${path}`,
       params: event.queryStringParameters,
       headers: {
         'X-Auth-Token': API_KEY
       }
     });
 
-    console.log('Proxy response:', response.data);
+    console.log('Proxy response status:', response.status);
+    console.log('Proxy response headers:', response.headers);
+    console.log('Proxy response data:', response.data);
 
     return {
       statusCode: 200,
