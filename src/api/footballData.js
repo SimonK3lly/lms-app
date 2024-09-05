@@ -35,12 +35,12 @@ export const getCurrentMatchday = async () => {
 
 export const getFixturesForMatchday = async (matchday) => {
   try {
-    // In development, always use cached data if available
-    if (process.env.NODE_ENV === 'development') {
-      const fixturesDoc = await getDoc(doc(db, 'fixtures', `matchday_${matchday}`));
-      if (fixturesDoc.exists()) {
-        console.log('Using cached fixtures data for development');
-        return fixturesDoc.data().matches;
+    const fixturesDoc = await getDoc(doc(db, 'fixtures', `matchday_${matchday}`));
+    if (fixturesDoc.exists()) {
+      const cachedData = fixturesDoc.data();
+      if (Date.now() - cachedData.lastUpdated < 3600000) { // 1 hour
+        console.log('Using cached fixtures data');
+        return cachedData.matches;
       }
     }
 
@@ -49,22 +49,17 @@ export const getFixturesForMatchday = async (matchday) => {
     const response = await api.get(`/competitions/PL/matches`, {
       params: { matchday }
     });
-    return response.data.matches;
+    const fixtures = response.data.matches;
+
+    // Cache the new data
+    await setDoc(doc(db, 'fixtures', `matchday_${matchday}`), {
+      matches: fixtures,
+      lastUpdated: Date.now()
+    });
+
+    return fixtures;
   } catch (error) {
     console.error('Error fetching fixtures:', error.message);
-    console.error('Full error:', JSON.stringify(error, null, 2));
-    
-    // Fallback to Firestore cache
-    try {
-      const fixturesDoc = await getDoc(doc(db, 'fixtures', `matchday_${matchday}`));
-      if (fixturesDoc.exists()) {
-        console.log('Using cached fixtures data');
-        return fixturesDoc.data().matches;
-      }
-    } catch (cacheError) {
-      console.error('Error fetching cached fixtures:', cacheError);
-    }
-    
     return [];
   }
 };

@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { db, auth } from '../firebase';
 import { doc, getDoc, collection, getDocs } from 'firebase/firestore';
 import '../styles/Competition.css';
-import { getFixturesForMatchday, getCurrentMatchday, cacheFixtures } from '../api/footballData';
+import { getFixturesForMatchday, getCurrentMatchday } from '../api/footballData';
 
 function Competition() {
   const { id } = useParams();
@@ -25,9 +25,6 @@ function Competition() {
         if (currentGameweek) {
           const fixturesData = await getFixturesForMatchday(currentGameweek);
           setFixtures(fixturesData);
-          
-          // Cache the fixtures data
-          await cacheFixtures(currentGameweek, fixturesData);
 
           // Calculate deadline
           if (fixturesData.length > 0) {
