@@ -7,7 +7,6 @@ import '../styles/CompetitionRegistration.css';
 
 function CompetitionRegistration() {
   const { joinCode } = useParams();
-  const location = useLocation();
   const navigate = useNavigate();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
