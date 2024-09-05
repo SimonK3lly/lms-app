@@ -20,7 +20,6 @@ function JoinCompetition() {
         return;
       }
 
-      const competitionDoc = querySnapshot.docs[0];
       navigate(`/join/${joinCode}`);
     } catch (e) {
       console.error('Error joining competition: ', e);
