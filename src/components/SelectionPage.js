@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { db } from '../firebase';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
-import { getFixturesForMatchday, getCurrentMatchday } from '../api/footballData';
+import { getFixturesForMatchday } from '../api/footballData';
 import '../styles/SelectionPage.css';
 
 function SelectionPage() {
