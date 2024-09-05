@@ -41,18 +41,20 @@ function CompetitionRegistration() {
     try {
       const participantRef = doc(collection(db, `competitions/${competitionId}/participants`));
       const participantId = participantRef.id;
+      
+      const competitionLink = `${window.location.origin}/competition/${competitionId}`;
+      const selectionLink = `${window.location.origin}/selection/${competitionId}/${participantId}`;
+
+      // Send welcome email first
+      await sendWelcomeEmail(email, name, competitionName, competitionLink, selectionLink);
+
+      // If email is sent successfully, add the user to the competition
       await setDoc(participantRef, {
         name,
         email,
         isActive: true,
         participantId: participantId
       });
-
-      const competitionLink = `${window.location.origin}/competition/${competitionId}`;
-      const selectionLink = `${window.location.origin}/selection/${competitionId}/${participantId}`;
-
-      // Send welcome email
-      await sendWelcomeEmail(email, name, competitionName, competitionLink, selectionLink);
 
       alert('Successfully joined the competition! Check your email for important links.');
       navigate(`/competition/${competitionId}`);
