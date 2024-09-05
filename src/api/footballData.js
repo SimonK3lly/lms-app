@@ -19,7 +19,14 @@ export const getCurrentMatchday = async () => {
     }
 
     const response = await api.get('/competitions/PL');
-    const currentMatchday = response.data.currentSeason?.currentMatchday;
+    console.log('API Response:', response.data); // Log the entire response
+
+    if (!response.data || !response.data.currentSeason) {
+      console.error('Unexpected API response structure:', response.data);
+      return null;
+    }
+
+    const currentMatchday = response.data.currentSeason.currentMatchday;
 
     if (!currentMatchday) {
       console.error('Unable to fetch current matchday from API');
