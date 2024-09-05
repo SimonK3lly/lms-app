@@ -19,22 +19,23 @@ function SelectionPage() {
         // Fetch competition data
         const competitionDoc = await getDoc(doc(db, 'competitions', competitionId));
         if (competitionDoc.exists()) {
-          setCompetitionName(competitionDoc.data().name);
-          setCurrentGameweek(competitionDoc.data().currentGameweek);
-        }
+          const competitionData = competitionDoc.data();
+          setCompetitionName(competitionData.name);
+          setCurrentGameweek(competitionData.currentGameweek);
 
-        // Fetch user data
-        const userDoc = await getDoc(doc(db, `competitions/${competitionId}/participants`, userId));
-        if (userDoc.exists()) {
-          setUserName(userDoc.data().name);
-        }
+          // Fetch user data
+          const userDoc = await getDoc(doc(db, `competitions/${competitionId}/participants`, userId));
+          if (userDoc.exists()) {
+            setUserName(userDoc.data().name);
+          }
 
-        // Fetch fixtures for the current gameweek
-        const matchday = await getCurrentMatchday();
-        const fixturesData = await getFixturesForMatchday(matchday);
-        setFixtures(fixturesData);
+          // Fetch fixtures for the current gameweek
+          const fixturesData = await getFixturesForMatchday(competitionData.currentGameweek);
+          setFixtures(fixturesData);
+        }
       } catch (error) {
         console.error('Error fetching data:', error);
+        setFixtures([]);  // Set fixtures to an empty array in case of error
       }
     };
 

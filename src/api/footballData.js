@@ -34,32 +34,23 @@ export const getCurrentMatchday = async () => {
 };
 
 export const getFixturesForMatchday = async (matchday) => {
+  if (!matchday) {
+    console.error('Invalid matchday:', matchday);
+    return [];
+  }
+
   try {
-    const fixturesDoc = await getDoc(doc(db, 'fixtures', `matchday_${matchday}`));
-    if (fixturesDoc.exists()) {
-      const cachedData = fixturesDoc.data();
-      if (Date.now() - cachedData.lastUpdated < 3600000) { // 1 hour
-        console.log('Using cached fixtures data');
-        return cachedData.matches;
-      }
+    console.log('Fetching fixtures from API for matchday:', matchday);
+    const response = await api.get(`/competitions/PL/matches?matchday=${matchday}`);
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    console.log('Fetching fixtures from API for matchday:', matchday);
-    
-    const response = await api.get(`/competitions/PL/matches`, {
-      params: { matchday }
-    });
-    const fixtures = response.data.matches;
-
-    // Cache the new data
-    await setDoc(doc(db, 'fixtures', `matchday_${matchday}`), {
-      matches: fixtures,
-      lastUpdated: Date.now()
-    });
-
-    return fixtures;
+    const data = response.data;
+    return data.matches || [];
   } catch (error) {
-    console.error('Error fetching fixtures:', error.message);
+    console.error('Error fetching fixtures:', error);
     return [];
   }
 };
