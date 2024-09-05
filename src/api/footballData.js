@@ -19,7 +19,12 @@ export const getCurrentMatchday = async () => {
     }
 
     const response = await api.get('/competitions/PL');
-    const currentMatchday = response.data.currentSeason.currentMatchday;
+    const currentMatchday = response.data.currentSeason?.currentMatchday;
+
+    if (!currentMatchday) {
+      console.error('Unable to fetch current matchday from API');
+      return null;
+    }
 
     await setDoc(doc(db, 'leagueData', LEAGUE_DOC_ID), {
       currentMatchday,
@@ -43,10 +48,6 @@ export const getFixturesForMatchday = async (matchday) => {
     console.log('Fetching fixtures from API for matchday:', matchday);
     const response = await api.get(`/competitions/PL/matches?matchday=${matchday}`);
     
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
     const data = response.data;
     return data.matches || [];
   } catch (error) {
