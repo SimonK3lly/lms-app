@@ -2,6 +2,6 @@
   functions = "netlify/functions"
 
 [[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/football-data-proxy/:splat"
+  from = "/*"
+  to = "/index.html"
   status = 200
