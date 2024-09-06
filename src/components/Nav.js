@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { auth } from '../firebase';
@@ -8,6 +8,7 @@ import logo from '../assets/icons8-soccer-50.png';
 function Nav() {
   const { currentUser } = useAuth();
   const navigate = useNavigate();
+  const [isNavOpen, setIsNavOpen] = useState(false);
 
   const handleLogout = async () => {
     try {
@@ -18,6 +19,10 @@ function Nav() {
     }
   };
 
+  const toggleNav = () => {
+    setIsNavOpen(!isNavOpen);
+  };
+
   return (
     <nav className="nav">
       <div className="nav-container">
@@ -25,18 +30,21 @@ function Nav() {
           <img src={logo} alt="LastManStanding Logo" />
           LastManStanding
         </Link>
-        <div className="nav-links">
-          <Link to="/join" className="nav-link">Join Competition</Link>
-          <Link to="/competition" className="nav-link">View Competition</Link>
-          {currentUser && <Link to="/admin" className="nav-link">Admin</Link>}
+        <button className="nav-toggle" onClick={toggleNav}>
+          ☰
+        </button>
+        <div className={`nav-links ${isNavOpen ? 'active' : ''}`}>
+          <Link to="/join" className="nav-link" onClick={toggleNav}>Join Competition</Link>
+          <Link to="/competition" className="nav-link" onClick={toggleNav}>View Competition</Link>
+          {currentUser && <Link to="/admin" className="nav-link" onClick={toggleNav}>Admin</Link>}
         </div>
-        <div className="nav-auth">
+        <div className={`nav-auth ${isNavOpen ? 'active' : ''}`}>
           {currentUser ? (
-            <button onClick={handleLogout} className="nav-button">Logout</button>
+            <button onClick={() => { handleLogout(); toggleNav(); }} className="nav-button">Logout</button>
           ) : (
             <>
-              <Link to="/login" className="nav-button">Login</Link>
-              <Link to="/signup" className="nav-button">Sign Up</Link>
+              <Link to="/login" className="nav-button" onClick={toggleNav}>Login</Link>
+              <Link to="/signup" className="nav-button" onClick={toggleNav}>Sign Up</Link>
             </>
           )}
         </div>
