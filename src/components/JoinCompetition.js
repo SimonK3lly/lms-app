@@ -20,7 +20,7 @@ function JoinCompetition() {
         return;
       }
 
-      navigate(`/join/${joinCode}`);
+      navigate(`/join/${joinCode}`, { state: { joinCode } });
     } catch (e) {
       console.error('Error joining competition: ', e);
       alert('Error joining competition. Please try again.');

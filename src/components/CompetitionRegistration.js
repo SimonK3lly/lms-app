@@ -1,27 +1,30 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { db } from '../firebase';
 import { doc, setDoc, collection, query, where, getDocs } from 'firebase/firestore';
 import emailjs from '@emailjs/browser';
 import '../styles/CompetitionRegistration.css';
 
 function CompetitionRegistration() {
-  const { joinCode } = useParams();
+  const { joinCode: urlJoinCode } = useParams();
+  const location = useLocation();
   const navigate = useNavigate();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [competitionId, setCompetitionId] = useState('');
   const [competitionName, setCompetitionName] = useState('');
 
-  useEffect(() => {
-    const fetchCompetitionDetails = async () => {
-      if (!joinCode) {
-        console.error('Join code is undefined');
-        alert('Invalid join code');
-        navigate('/');
-        return;
-      }
+  const joinCode = urlJoinCode || location.state?.joinCode;
 
+  useEffect(() => {
+    if (!joinCode) {
+      console.error('Join code is undefined');
+      alert('Invalid join code');
+      navigate('/');
+      return;
+    }
+
+    const fetchCompetitionDetails = async () => {
       try {
         const competitionsRef = collection(db, 'competitions');
         const q = query(competitionsRef, where("joinCode", "==", joinCode));
