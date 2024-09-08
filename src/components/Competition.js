@@ -71,14 +71,16 @@ function Competition() {
           <ul className="fixtures-list">
             {fixtures.map((fixture) => (
               <li key={fixture.id} className="fixture-item">
-                <div className="team home-team">
-                  <img src={fixture.homeTeam.crest} alt={fixture.homeTeam.name} className="team-logo" />
-                  <span className="team-name">{fixture.homeTeam.name}</span>
-                </div>
-                <span className="vs">vs</span>
-                <div className="team away-team">
-                  <img src={fixture.awayTeam.crest} alt={fixture.awayTeam.name} className="team-logo" />
-                  <span className="team-name">{fixture.awayTeam.name}</span>
+                <div className="teams-container">
+                  <div className="team home-team">
+                    <img src={fixture.homeTeam.crest} alt={fixture.homeTeam.name} className="team-logo" />
+                    <span className="team-name">{fixture.homeTeam.name}</span>
+                  </div>
+                  <span className="vs">vs</span>
+                  <div className="team away-team">
+                    <img src={fixture.awayTeam.crest} alt={fixture.awayTeam.name} className="team-logo" />
+                    <span className="team-name">{fixture.awayTeam.name}</span>
+                  </div>
                 </div>
                 <span className="fixture-date">{new Date(fixture.utcDate).toLocaleString()}</span>
               </li>
