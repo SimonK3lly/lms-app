@@ -12,6 +12,9 @@ import { AuthProvider } from './contexts/AuthContext';
 import JoinCompetition from './components/JoinCompetition';
 import CompetitionRegistration from './components/CompetitionRegistration';
 import SelectionPage from './components/SelectionPage';
+import ForgotPassword from './components/ForgotPassword';
+import TermsOfService from './components/TermsOfService';
+import PrivacyPolicy from './components/PrivacyPolicy';
 
 function App() {
   return (
@@ -29,6 +32,9 @@ function App() {
             <Route path="/join" element={<JoinCompetition />} />
             <Route path="/join/:competitionId" element={<CompetitionRegistration />} />
             <Route path="/selection/:competitionId/:userId" element={<SelectionPage />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/terms" element={<TermsOfService />} />
+            <Route path="/privacy" element={<PrivacyPolicy />} />
           </Routes>
         </Layout>
       </AuthProvider>

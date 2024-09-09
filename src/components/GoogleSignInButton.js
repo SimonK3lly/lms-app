@@ -1,6 +1,8 @@
 import React from 'react';
 import { signInWithGoogle } from '../firebase';
 import { useNavigate } from 'react-router-dom';
+import '../styles/GoogleSignInButton.css';
+import googleSignIn from '../assets/googleSignIn.jpg';
 
 const GoogleSignInButton = () => {
   const navigate = useNavigate();
@@ -17,7 +19,8 @@ const GoogleSignInButton = () => {
 
   return (
     <button onClick={handleGoogleSignIn} className="google-sign-in-button">
-      Sign in with Google
+      <img src={googleSignIn} alt="Google logo" />
+      <span>Sign in with Google</span>
     </button>
   );
 };

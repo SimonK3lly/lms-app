@@ -11,6 +11,7 @@
     color: #3c4043;
     cursor: pointer;
     transition: background-color 0.3s;
+    margin: 12px auto;
   }
   
   .google-sign-in-button:hover {

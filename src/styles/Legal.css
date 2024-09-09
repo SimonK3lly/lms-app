@@ -1,0 +1,18 @@
+@import './SharedStyles.css';
+
+.legal-content {
+  text-align: left;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.legal-content h2 {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  color: #4CAF50;
+}
+
+.legal-content p {
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}

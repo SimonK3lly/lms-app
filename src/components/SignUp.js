@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { signUpWithEmailAndPassword } from '../firebase';
 import GoogleSignInButton from './GoogleSignInButton';
 import '../styles/Register.css';
+import { Link } from 'react-router-dom';
 
 const SignUp = () => {
   const [email, setEmail] = useState('');
@@ -57,7 +58,7 @@ const SignUp = () => {
         {error && <p style={{ color: 'red' }}>{error}</p>}
         <GoogleSignInButton />
         <p className="terms">
-          By signing up, you agree to our <a href="/terms">Terms of Service</a> and <a href="/privacy">Privacy Policy</a>.
+          By signing up, you agree to our <Link to="/terms">Terms of Service</Link> and <Link to="/privacy">Privacy Policy</Link>.
         </p>
       </div>
     </div>
