@@ -78,8 +78,14 @@ function SelectionPage() {
     }
   }, [competitionId, userId, currentGameweek]);
 
+  useEffect(() => {
+    if (savedSelection) {
+      setSelectedTeam(savedSelection);
+    }
+  }, [savedSelection]);
+
   const handleTeamSelection = (teamId, teamName) => {
-    if (previousSelections.includes(teamId)) {
+    if (previousSelections.includes(teamId) && savedSelection?.id !== teamId) {
       alert("You've already selected this team in a previous week.");
       return;
     }
