@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { db } from '../firebase';
 import { collection, query, where, getDocs } from 'firebase/firestore';
@@ -8,11 +8,10 @@ function JoinCompetition() {
   const [joinCode, setJoinCode] = useState('');
   const navigate = useNavigate();
 
-  const handleJoinCompetition = async (e) => {
-    e.preventDefault();
+  const handleJoinCompetition = useCallback(async (code) => {
     try {
       const competitionsRef = collection(db, 'competitions');
-      const q = query(competitionsRef, where("joinCode", "==", joinCode));
+      const q = query(competitionsRef, where("joinCode", "==", code));
       const querySnapshot = await getDocs(q);
 
       if (querySnapshot.empty) {
@@ -20,17 +19,22 @@ function JoinCompetition() {
         return;
       }
 
-      navigate(`/join/${joinCode}`, { state: { joinCode } });
+      navigate(`/join/${code}`);
     } catch (e) {
       console.error('Error joining competition: ', e);
       alert('Error joining competition. Please try again.');
     }
+  }, [navigate]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    handleJoinCompetition(joinCode);
   };
 
   return (
     <div className="join-competition-container">
       <h2 className="join-competition-title">Join Competition</h2>
-      <form onSubmit={handleJoinCompetition} className="join-competition-form">
+      <form onSubmit={handleSubmit} className="join-competition-form">
         <input
           type="text"
           value={joinCode}

@@ -31,7 +31,7 @@ function App() {
             <Route path="/competition/:competitionId" element={<Competition />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="/join" element={<JoinCompetition />} />
-            <Route path="/join/:competitionId" element={<CompetitionRegistration />} />
+            <Route path="/join/:joinCode" element={<CompetitionRegistration />} />
             <Route path="/selection/:competitionId/:userId" element={<SelectionPage />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/terms" element={<TermsOfService />} />
