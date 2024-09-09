@@ -14,6 +14,7 @@ function SelectionPage() {
   const [userName, setUserName] = useState('');
   const [previousSelections, setPreviousSelections] = useState([]);
   const [deadline, setDeadline] = useState(null);
+  const [savedSelection, setSavedSelection] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -68,7 +69,7 @@ function SelectionPage() {
 
       const currentSelection = allSelections.find(selection => selection.gameweek === currentGameweek);
       if (currentSelection) {
-        setSelectedTeam({ id: currentSelection.teamId, name: currentSelection.teamName });
+        setSavedSelection({ id: currentSelection.teamId, name: currentSelection.teamName });
       }
     };
 
@@ -104,7 +105,7 @@ function SelectionPage() {
         gameweek: currentGameweek,
         timestamp: new Date()
       });
-
+      setSavedSelection(selectedTeam);
       alert('Your selection has been submitted successfully!');
     } catch (error) {
       console.error('Error submitting selection:', error);
@@ -117,7 +118,7 @@ function SelectionPage() {
       <h1 className="selection-page-title">{competitionName} - Gameweek {currentGameweek}</h1>
       <h2 className="user-selection-title">{userName}</h2>
       <p className="current-selection">
-        Current Selection: {selectedTeam ? selectedTeam.name : 'None'}
+        Current Saved Selection: {savedSelection ? savedSelection.name : 'None'}
       </p>
       <form onSubmit={handleSubmit} className="selection-form">
         <div className="fixtures-container">
