@@ -109,6 +109,13 @@
     cursor: not-allowed;
   }
 
+  .current-selection {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    text-align: center;
+    color: #4CAF50;
+  }
+
 @media (max-width: 768px) {
   .fixture-item {
     flex-direction: column;

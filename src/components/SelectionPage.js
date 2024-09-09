@@ -115,7 +115,10 @@ function SelectionPage() {
   return (
     <div className="selection-page-container">
       <h1 className="selection-page-title">{competitionName} - Gameweek {currentGameweek}</h1>
-      <h2 className="user-selection-title">{userName}'s Selection</h2>
+      <h2 className="user-selection-title">{userName}</h2>
+      <p className="current-selection">
+        Current Selection: {selectedTeam ? selectedTeam.name : 'None'}
+      </p>
       <form onSubmit={handleSubmit} className="selection-form">
         <div className="fixtures-container">
           {fixtures.map((fixture) => (
