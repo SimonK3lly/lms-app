@@ -15,6 +15,7 @@ import SelectionPage from './components/SelectionPage';
 import ForgotPassword from './components/ForgotPassword';
 import TermsOfService from './components/TermsOfService';
 import PrivacyPolicy from './components/PrivacyPolicy';
+import Rules from './components/Rules';
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/terms" element={<TermsOfService />} />
             <Route path="/privacy" element={<PrivacyPolicy />} />
+            <Route path="/rules" element={<Rules />} />
           </Routes>
         </Layout>
       </AuthProvider>

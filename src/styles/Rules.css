@@ -1,0 +1,19 @@
+.rules-content {
+    text-align: left;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .rules-content h2 {
+    color: #4CAF50;
+    margin-bottom: 1rem;
+  }
+  
+  .rules-content ol {
+    padding-left: 20px;
+  }
+  
+  .rules-content li {
+    margin-bottom: 1rem;
+    line-height: 1.6;
+  }

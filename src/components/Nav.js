@@ -36,6 +36,7 @@ function Nav() {
         <div className={`nav-links ${isNavOpen ? 'active' : ''}`}>
           <Link to="/join" className="nav-link" onClick={toggleNav}>Join Competition</Link>
           <Link to="/competition" className="nav-link" onClick={toggleNav}>View Competition</Link>
+          <Link to="/rules" className="nav-link" onClick={toggleNav}>Rules</Link>
           {currentUser && <Link to="/admin" className="nav-link" onClick={toggleNav}>Admin</Link>}
         </div>
         <div className={`nav-auth ${isNavOpen ? 'active' : ''}`}>
