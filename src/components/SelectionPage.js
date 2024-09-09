@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { db } from '../firebase';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, collection, getDocs } from 'firebase/firestore';
 import { getFixturesForMatchday } from '../api/footballData';
 import '../styles/SelectionPage.css';
 
@@ -12,6 +12,8 @@ function SelectionPage() {
   const [competitionName, setCompetitionName] = useState('');
   const [currentGameweek, setCurrentGameweek] = useState(null);
   const [userName, setUserName] = useState('');
+  const [previousSelections, setPreviousSelections] = useState([]);
+  const [deadline, setDeadline] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -32,6 +34,15 @@ function SelectionPage() {
           // Fetch fixtures for the current gameweek
           const fixturesData = await getFixturesForMatchday(competitionData.currentGameweek);
           setFixtures(fixturesData);
+
+          if (fixturesData.length > 0) {
+            const firstFixtureDate = new Date(fixturesData[0].utcDate);
+            const deadlineDate = new Date(firstFixtureDate);
+            deadlineDate.setHours(deadlineDate.getHours() - 1);
+            setDeadline(deadlineDate);
+          } else {
+            setDeadline(null);
+          }
         }
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -42,12 +53,32 @@ function SelectionPage() {
     fetchData();
   }, [competitionId, userId]);
 
+  useEffect(() => {
+    const fetchPreviousSelections = async () => {
+      const selectionsRef = collection(db, `competitions/${competitionId}/participants/${userId}/selections`);
+      const selectionsSnapshot = await getDocs(selectionsRef);
+      const previousSelections = selectionsSnapshot.docs.map(doc => doc.data().teamId);
+      setPreviousSelections(previousSelections);
+    };
+
+    fetchPreviousSelections();
+  }, [competitionId, userId]);
+
   const handleTeamSelection = (teamId, teamName) => {
+    if (previousSelections.includes(teamId)) {
+      alert("You've already selected this team in a previous week.");
+      return;
+    }
     setSelectedTeam({ id: teamId, name: teamName });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const now = new Date();
+    if (deadline && now >= deadline) {
+      alert('The deadline for selections has passed.');
+      return;
+    }
     if (!selectedTeam) {
       alert('Please select a team before submitting.');
       return;
@@ -78,20 +109,22 @@ function SelectionPage() {
             <div key={fixture.id} className="fixture-item">
               <button
                 type="button"
-                className={`team-button ${selectedTeam?.id === fixture.homeTeam.id ? 'selected' : ''}`}
+                className={`team-button ${selectedTeam?.id === fixture.homeTeam.id ? 'selected' : ''} ${previousSelections.includes(fixture.homeTeam.id) ? 'disabled' : ''}`}
                 onClick={() => handleTeamSelection(fixture.homeTeam.id, fixture.homeTeam.name)}
+                disabled={previousSelections.includes(fixture.homeTeam.id)}
               >
-                <img src={fixture.homeTeam.crest} alt={fixture.homeTeam.name} className="team-logo" />
-                <span>{fixture.homeTeam.name}</span>
+                <img src={fixture.homeTeam.crest} alt={fixture.homeTeam.name} className={`team-logo ${previousSelections.includes(fixture.homeTeam.id) ? 'greyed-out' : ''}`} />
+                <span className={previousSelections.includes(fixture.homeTeam.id) ? 'greyed-out' : ''}>{fixture.homeTeam.name}</span>
               </button>
               <span className="vs">vs</span>
               <button
                 type="button"
-                className={`team-button ${selectedTeam?.id === fixture.awayTeam.id ? 'selected' : ''}`}
+                className={`team-button ${selectedTeam?.id === fixture.awayTeam.id ? 'selected' : ''} ${previousSelections.includes(fixture.awayTeam.id) ? 'disabled' : ''}`}
                 onClick={() => handleTeamSelection(fixture.awayTeam.id, fixture.awayTeam.name)}
+                disabled={previousSelections.includes(fixture.awayTeam.id)}
               >
-                <img src={fixture.awayTeam.crest} alt={fixture.awayTeam.name} className="team-logo" />
-                <span>{fixture.awayTeam.name}</span>
+                <img src={fixture.awayTeam.crest} alt={fixture.awayTeam.name} className={`team-logo ${previousSelections.includes(fixture.awayTeam.id) ? 'greyed-out' : ''}`} />
+                <span className={previousSelections.includes(fixture.awayTeam.id) ? 'greyed-out' : ''}>{fixture.awayTeam.name}</span>
               </button>
             </div>
           ))}

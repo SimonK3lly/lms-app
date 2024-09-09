@@ -30,8 +30,7 @@ function Competition() {
           if (fixturesData.length > 0) {
             const firstFixtureDate = new Date(fixturesData[0].utcDate);
             const deadlineDate = new Date(firstFixtureDate);
-            deadlineDate.setDate(deadlineDate.getDate() - 1);
-            deadlineDate.setHours(22, 0, 0, 0);
+            deadlineDate.setHours(deadlineDate.getHours() - 1);
             setDeadline(deadlineDate);
           } else {
             setDeadline(null);
@@ -68,21 +67,21 @@ function Competition() {
 
         <h2>Fixtures</h2>
         <div className="fixtures-container">
-          <ul className="competition-fixtures-list">
+          <ul className="fixtures-list">
             {fixtures.map((fixture) => (
-              <li key={fixture.id} className="competition-fixture-item">
-                <div className="competition-teams-container">
-                  <div className="competition-team home-team">
-                    <img src={fixture.homeTeam.crest} alt={fixture.homeTeam.name} className="competition-team-logo" />
-                    <span className="competition-team-name">{fixture.homeTeam.name}</span>
+              <li key={fixture.id} className="fixture-item">
+                <div className="teams-container">
+                  <div className="team home-team">
+                    <img src={fixture.homeTeam.crest} alt={fixture.homeTeam.name} className="team-logo" />
+                    <span className="team-name">{fixture.homeTeam.name}</span>
                   </div>
-                  <span className="competition-vs">vs</span>
-                  <div className="competition-team away-team">
-                    <img src={fixture.awayTeam.crest} alt={fixture.awayTeam.name} className="competition-team-logo" />
-                    <span className="competition-team-name">{fixture.awayTeam.name}</span>
+                  <span className="vs">vs</span>
+                  <div className="team away-team">
+                    <img src={fixture.awayTeam.crest} alt={fixture.awayTeam.name} className="team-logo" />
+                    <span className="team-name">{fixture.awayTeam.name}</span>
                   </div>
                 </div>
-                <span className="competition-fixture-date">{new Date(fixture.utcDate).toLocaleString()}</span>
+                <span className="fixture-date">{new Date(fixture.utcDate).toLocaleString()}</span>
               </li>
             ))}
           </ul>
