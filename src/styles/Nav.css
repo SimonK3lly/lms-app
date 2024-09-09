@@ -44,7 +44,10 @@
     text-decoration: none;
     font-size: 1rem;
     transition: color 0.3s ease;
-    margin: 0 8px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    text-align: center;
   }
   
   .nav-link:hover {
