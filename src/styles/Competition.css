@@ -119,7 +119,8 @@
 }
 
 .team-name {
-  font-size: 0.9rem;
+  font-size: 14px;
+  margin-top: 4px;
   text-align: center;
   word-wrap: break-word;
 }
