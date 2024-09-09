@@ -57,12 +57,25 @@ function SelectionPage() {
     const fetchPreviousSelections = async () => {
       const selectionsRef = collection(db, `competitions/${competitionId}/participants/${userId}/selections`);
       const selectionsSnapshot = await getDocs(selectionsRef);
-      const previousSelections = selectionsSnapshot.docs.map(doc => doc.data().teamId);
+      const allSelections = selectionsSnapshot.docs.map(doc => ({
+        gameweek: parseInt(doc.id),
+        teamId: doc.data().teamId,
+        teamName: doc.data().teamName
+      }));
+      
+      const previousSelections = allSelections.filter(selection => selection.gameweek < currentGameweek).map(selection => selection.teamId);
       setPreviousSelections(previousSelections);
+
+      const currentSelection = allSelections.find(selection => selection.gameweek === currentGameweek);
+      if (currentSelection) {
+        setSelectedTeam({ id: currentSelection.teamId, name: currentSelection.teamName });
+      }
     };
 
-    fetchPreviousSelections();
-  }, [competitionId, userId]);
+    if (currentGameweek) {
+      fetchPreviousSelections();
+    }
+  }, [competitionId, userId, currentGameweek]);
 
   const handleTeamSelection = (teamId, teamName) => {
     if (previousSelections.includes(teamId)) {
