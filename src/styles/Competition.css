@@ -234,4 +234,9 @@
   .competition-fixture-date {
     font-size: 0.8rem;
   }
+
+  /* Ensure fixture-item maintains its layout on mobile for Competition page */
+  .fixture-item {
+    flex-direction: row;
+  }
 }
