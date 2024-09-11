@@ -32,7 +32,7 @@ Last Man Standing is a sophisticated React-based web application that demonstrat
 
 ## Deployment
 
-This application is deployed using Netlify. The live version can be viewed at https://main--superlative-muffin-918c0f.netlify.app/.
+This application is deployed using Netlify. The live version can be viewed at https://lastmanstand.ie/.
 
 ## Running the Project Locally
 
