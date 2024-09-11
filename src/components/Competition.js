@@ -4,6 +4,7 @@ import { db, auth } from '../firebase';
 import { doc, getDoc, collection, getDocs } from 'firebase/firestore';
 import '../styles/Competition.css';
 import { getFixturesForMatchday, getCurrentMatchday } from '../api/footballData';
+import LoadingSpinner from './LoadingSpinner';
 
 function Competition() {
   const { competitionId } = useParams();
@@ -60,54 +61,56 @@ function Competition() {
       <div className="content-container">
         <h1 className="page-title">{competition.name}</h1>
         <h1>Gameweek {competition.currentGameweek}</h1>
-        <p className="competition-details">Gameweek {competition.currentGameweek} Deadline: {deadline ? deadline.toLocaleString() : 'Loading...'}</p>
-        
-        {isAdmin && (
-          <div className="admin-info">
-            <p>Join Code: {competition.joinCode}</p>
-            <p>Join Link: {`${window.location.origin}/join/${competition.joinCode}`}</p>
-          </div>
-        )}
-
-        <h2>Fixtures</h2>
         {isLoading ? (
-          <div className="loading-message">Loading fixtures...</div>
+          <LoadingSpinner />
         ) : (
-          <div className="fixtures-container">
-            <ul className="fixtures-list">
-              {fixtures.map((fixture) => (
-                <li key={fixture.id} className="fixture-item">
-                  <div className="teams-container">
-                    <div className="team home-team">
-                      <img src={fixture.homeTeam.crest} alt={fixture.homeTeam.name} className="team-logo" />
-                      <span className="team-name">{fixture.homeTeam.name}</span>
+          <>
+            <p className="competition-details">Gameweek {competition.currentGameweek} Deadline: {deadline ? deadline.toLocaleString() : 'Loading...'}</p>
+            
+            {isAdmin && (
+              <div className="admin-info">
+                <p>Join Code: {competition.joinCode}</p>
+                <p>Join Link: {`${window.location.origin}/join/${competition.joinCode}`}</p>
+              </div>
+            )}
+
+            <h2>Fixtures</h2>
+            <div className="fixtures-container">
+              <ul className="fixtures-list">
+                {fixtures.map((fixture) => (
+                  <li key={fixture.id} className="fixture-item">
+                    <div className="teams-container">
+                      <div className="team home-team">
+                        <img src={fixture.homeTeam.crest} alt={fixture.homeTeam.name} className="team-logo" />
+                        <span className="team-name">{fixture.homeTeam.name}</span>
+                      </div>
+                      <span className="vs">vs</span>
+                      <div className="team away-team">
+                        <img src={fixture.awayTeam.crest} alt={fixture.awayTeam.name} className="team-logo" />
+                        <span className="team-name">{fixture.awayTeam.name}</span>
+                      </div>
                     </div>
-                    <span className="vs">vs</span>
-                    <div className="team away-team">
-                      <img src={fixture.awayTeam.crest} alt={fixture.awayTeam.name} className="team-logo" />
-                      <span className="team-name">{fixture.awayTeam.name}</span>
-                    </div>
-                  </div>
-                  <span className="fixture-date">{new Date(fixture.utcDate).toLocaleString()}</span>
+                    <span className="fixture-date">{new Date(fixture.utcDate).toLocaleString()}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <h2>Participants ({participants.length})</h2>
+            <ul className="participants-list">
+              {participants.map((participant) => (
+                <li key={participant.id} className="participant-item">
+                  <span className="participant-name">{participant.name}</span>
+                  {isAdmin && (
+                    <span className="participant-email">
+                      {participant.email} (ID: {participant.id})
+                    </span>
+                  )}
                 </li>
               ))}
             </ul>
-          </div>
+          </>
         )}
-
-        <h2>Participants ({participants.length})</h2>
-        <ul className="participants-list">
-          {participants.map((participant) => (
-            <li key={participant.id} className="participant-item">
-              <span className="participant-name">{participant.name}</span>
-              {isAdmin && (
-                <span className="participant-email">
-                  {participant.email} (ID: {participant.id})
-                </span>
-              )}
-            </li>
-          ))}
-        </ul>
       </div>
     </div>
   );
