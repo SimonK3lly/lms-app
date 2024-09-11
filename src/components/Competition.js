@@ -58,7 +58,8 @@ function Competition() {
   return (
     <div className="page-container">
       <div className="content-container">
-        <h1 className="page-title">{competition.name} - Gameweek {competition.currentGameweek}</h1>
+        <h1 className="page-title">{competition.name}</h1>
+        <h1>Gameweek {competition.currentGameweek}</h1>
         <p className="competition-details">Gameweek {competition.currentGameweek} Deadline: {deadline ? deadline.toLocaleString() : 'Loading...'}</p>
         
         {isAdmin && (
