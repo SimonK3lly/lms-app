@@ -12,9 +12,11 @@ function Competition() {
   const [fixtures, setFixtures] = useState([]);
   const [participants, setParticipants] = useState([]);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchCompetitionAndFixtures = async () => {
+      setIsLoading(true);
       const docRef = doc(db, 'competitions', competitionId);
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
@@ -45,6 +47,7 @@ function Competition() {
       } else {
         console.log('No such document!');
       }
+      setIsLoading(false);
     };
 
     fetchCompetitionAndFixtures();
@@ -66,26 +69,30 @@ function Competition() {
         )}
 
         <h2>Fixtures</h2>
-        <div className="fixtures-container">
-          <ul className="fixtures-list">
-            {fixtures.map((fixture) => (
-              <li key={fixture.id} className="fixture-item">
-                <div className="teams-container">
-                  <div className="team home-team">
-                    <img src={fixture.homeTeam.crest} alt={fixture.homeTeam.name} className="team-logo" />
-                    <span className="team-name">{fixture.homeTeam.name}</span>
+        {isLoading ? (
+          <div className="loading-message">Loading fixtures...</div>
+        ) : (
+          <div className="fixtures-container">
+            <ul className="fixtures-list">
+              {fixtures.map((fixture) => (
+                <li key={fixture.id} className="fixture-item">
+                  <div className="teams-container">
+                    <div className="team home-team">
+                      <img src={fixture.homeTeam.crest} alt={fixture.homeTeam.name} className="team-logo" />
+                      <span className="team-name">{fixture.homeTeam.name}</span>
+                    </div>
+                    <span className="vs">vs</span>
+                    <div className="team away-team">
+                      <img src={fixture.awayTeam.crest} alt={fixture.awayTeam.name} className="team-logo" />
+                      <span className="team-name">{fixture.awayTeam.name}</span>
+                    </div>
                   </div>
-                  <span className="vs">vs</span>
-                  <div className="team away-team">
-                    <img src={fixture.awayTeam.crest} alt={fixture.awayTeam.name} className="team-logo" />
-                    <span className="team-name">{fixture.awayTeam.name}</span>
-                  </div>
-                </div>
-                <span className="fixture-date">{new Date(fixture.utcDate).toLocaleString()}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
+                  <span className="fixture-date">{new Date(fixture.utcDate).toLocaleString()}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         <h2>Participants ({participants.length})</h2>
         <ul className="participants-list">
