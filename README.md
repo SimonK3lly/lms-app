@@ -4,6 +4,8 @@
 
 Last Man Standing is a sophisticated React-based web application that demonstrates my proficiency in modern web development technologies and best practices. This project showcases my ability to create a complex, user-friendly application that integrates third-party APIs, implements secure authentication, and manages real-time data.
 
+Last Man Standing (LMS) is an exciting football prediction game where participants attempt to correctly predict one winning team each week from a selection of matches. If your chosen team wins, you progress to the next week. If they lose or draw, you're eliminated. The last participant standing wins the competition. This app provides a platform for users to join LMS competitions, make predictions, and track their progress throughout the football season.
+
 ## Key Features
 
 - **User Authentication**: Implemented secure login using Firebase, supporting both email/password and Google Sign-In methods.
@@ -12,6 +14,17 @@ Last Man Standing is a sophisticated React-based web application that demonstrat
 - **Complex State Management**: Implemented React Context API for global state management, demonstrating understanding of advanced React concepts.
 - **Responsive Design**: Created a fully responsive UI that works flawlessly on both mobile and desktop devices.
 - **Admin Functionality**: Developed an admin panel for competition management, showcasing ability to create role-based access control.
+
+## Technologies Used
+
+- React 18
+- Firebase (Authentication, Firestore)
+- Football-Data API
+- CSS3 (with Flexbox/Grid for layouts)
+- Axios for API requests
+- React Router for navigation
+- GitHub Actions for CI/CD
+- Netlify for hosting
 
 ## Technical Skills Demonstrated
 
