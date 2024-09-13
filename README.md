@@ -4,7 +4,9 @@
 
 Last Man Standing is a sophisticated React-based web application that demonstrates my proficiency in modern web development technologies and best practices. This project showcases my ability to create a complex, user-friendly application that integrates third-party APIs, implements secure authentication, and manages real-time data.
 
-Last Man Standing (LMS) is an exciting football prediction game where participants attempt to correctly predict one winning team each week from a selection of matches. If your chosen team wins, you progress to the next week. If they lose or draw, you're eliminated. The last participant standing wins the competition. This app provides a platform for users to join LMS competitions, make predictions, and track their progress throughout the football season.
+
+## The Game
+Last Man Standing is an football prediction game usually played between friends or teammates where participants attempt to correctly predict one winning team each week from a selection of matches. If your chosen team wins, you progress to the next week. If they lose or draw, you're eliminated. The last participant standing wins the competition. This app provides a platform for users to join LMS competitions, make predictions, and track their progress throughout the football season.
 
 ## Key Features
 
