@@ -71,7 +71,7 @@ Note: Local development will use cached data and may not reflect the most recent
 <img width="1728" alt="Screenshot 2024-09-13 at 2 08 03 a m" src="https://github.com/user-attachments/assets/bd5da8f0-7345-4f6e-b65e-16f2e12d3b38">
 
 
-![Screen Shot 2024-09-13 at 02 12 56](https://github.com/user-attachments/assets/47b0985e-21f6-4bf2-a4a9-c8d8ba9e82d4)
+<img width="424" alt="Screenshot 2024-09-13 at 2 16 02 a m" src="https://github.com/user-attachments/assets/a980108c-0fcc-472d-87ee-b6e2e16b192c">
 
 
 <img width="424" alt="Screenshot 2024-09-13 at 2 09 37 a m" src="https://github.com/user-attachments/assets/ce5c9eca-652d-4957-9cac-753694b46fc7">
