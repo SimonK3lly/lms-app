@@ -54,3 +54,18 @@ To run this project locally:
 When running the application locally, it will use cached fixture data from Firestore instead of making live API calls. This is to simplify the local development setup and avoid potential CORS issues. The live API calls will work correctly in the deployed Netlify environment.
 
 Note: Local development will use cached data and may not reflect the most recent fixtures.
+
+
+
+## Screenshots
+
+<img width="1728" alt="Screenshot 2024-09-13 at 2 00 51 a m" src="https://github.com/user-attachments/assets/ccff5f72-ab67-41e6-b62b-ad3d4b034947">
+
+
+<img width="1728" alt="Screenshot 2024-09-13 at 2 01 45 a m" src="https://github.com/user-attachments/assets/8e9f32bb-bb29-486c-b6d6-91af425ff370">
+
+
+<img width="1728" alt="Screenshot 2024-09-13 at 2 02 18 a m" src="https://github.com/user-attachments/assets/02eaec1f-fd80-487d-849c-a199626a315a">
+
+
+
