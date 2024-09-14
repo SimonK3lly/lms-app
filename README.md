@@ -61,7 +61,7 @@ To run this project locally:
 ## Future Enhancements
 
 - Implement unit and integration tests using Jest and React Testing Library.
-- Add more advanced statistics and data visualization for match predictions.
+- Add more advanced statistics and data visualization for match predictions(betting odds).
 - Implement a mobile app version using React Native.
 
 ## Development Notes
