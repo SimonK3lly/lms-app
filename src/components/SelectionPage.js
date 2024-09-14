@@ -4,6 +4,7 @@ import { db } from '../firebase';
 import { doc, getDoc, setDoc, collection, getDocs } from 'firebase/firestore';
 import { getFixturesForMatchday } from '../api/footballData';
 import '../styles/SelectionPage.css';
+import LoadingSpinner from './LoadingSpinner';
 
 function SelectionPage() {
   const { competitionId, userId } = useParams();
@@ -15,9 +16,11 @@ function SelectionPage() {
   const [previousSelections, setPreviousSelections] = useState([]);
   const [deadline, setDeadline] = useState(null);
   const [savedSelection, setSavedSelection] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
+      setIsLoading(true);
       try {
         // Fetch competition data
         const competitionDoc = await getDoc(doc(db, 'competitions', competitionId));
@@ -47,7 +50,9 @@ function SelectionPage() {
         }
       } catch (error) {
         console.error('Error fetching data:', error);
-        setFixtures([]);  // Set fixtures to an empty array in case of error
+        setFixtures([]);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -126,39 +131,43 @@ function SelectionPage() {
       <p className="current-selection">
         Current Saved Selection: {savedSelection ? savedSelection.name : 'None'}
       </p>
-      <form onSubmit={handleSubmit} className="selection-form">
-        <div className="fixtures-container">
-          {fixtures.map((fixture) => (
-            <div key={fixture.id} className="fixture-item">
-              <button
-                type="button"
-                className={`team-button ${selectedTeam?.id === fixture.homeTeam.id ? 'selected' : ''} ${previousSelections.includes(fixture.homeTeam.id) ? 'disabled' : ''}`}
-                onClick={() => handleTeamSelection(fixture.homeTeam.id, fixture.homeTeam.name)}
-                disabled={previousSelections.includes(fixture.homeTeam.id)}
-              >
-                <img src={fixture.homeTeam.crest} alt={fixture.homeTeam.name} className={`team-logo ${previousSelections.includes(fixture.homeTeam.id) ? 'greyed-out' : ''}`} />
-                <span className={previousSelections.includes(fixture.homeTeam.id) ? 'greyed-out' : ''}>{fixture.homeTeam.name}</span>
-              </button>
-              <span className="vs">vs</span>
-              <button
-                type="button"
-                className={`team-button ${selectedTeam?.id === fixture.awayTeam.id ? 'selected' : ''} ${previousSelections.includes(fixture.awayTeam.id) ? 'disabled' : ''}`}
-                onClick={() => handleTeamSelection(fixture.awayTeam.id, fixture.awayTeam.name)}
-                disabled={previousSelections.includes(fixture.awayTeam.id)}
-              >
-                <img src={fixture.awayTeam.crest} alt={fixture.awayTeam.name} className={`team-logo ${previousSelections.includes(fixture.awayTeam.id) ? 'greyed-out' : ''}`} />
-                <span className={previousSelections.includes(fixture.awayTeam.id) ? 'greyed-out' : ''}>{fixture.awayTeam.name}</span>
-              </button>
-            </div>
-          ))}
-        </div>
-        <div className="selection-summary">
-          {selectedTeam && <p>You have selected: {selectedTeam.name}</p>}
-          <button type="submit" className="submit-button" disabled={!selectedTeam}>
-            Submit Selection
-          </button>
-        </div>
-      </form>
+      {isLoading ? (
+        <LoadingSpinner />
+      ) : (
+        <form onSubmit={handleSubmit} className="selection-form">
+          <div className="fixtures-container">
+            {fixtures.map((fixture) => (
+              <div key={fixture.id} className="fixture-item">
+                <button
+                  type="button"
+                  className={`team-button ${selectedTeam?.id === fixture.homeTeam.id ? 'selected' : ''} ${previousSelections.includes(fixture.homeTeam.id) ? 'disabled' : ''}`}
+                  onClick={() => handleTeamSelection(fixture.homeTeam.id, fixture.homeTeam.name)}
+                  disabled={previousSelections.includes(fixture.homeTeam.id)}
+                >
+                  <img src={fixture.homeTeam.crest} alt={fixture.homeTeam.name} className={`team-logo ${previousSelections.includes(fixture.homeTeam.id) ? 'greyed-out' : ''}`} />
+                  <span className={previousSelections.includes(fixture.homeTeam.id) ? 'greyed-out' : ''}>{fixture.homeTeam.name}</span>
+                </button>
+                <span className="vs">vs</span>
+                <button
+                  type="button"
+                  className={`team-button ${selectedTeam?.id === fixture.awayTeam.id ? 'selected' : ''} ${previousSelections.includes(fixture.awayTeam.id) ? 'disabled' : ''}`}
+                  onClick={() => handleTeamSelection(fixture.awayTeam.id, fixture.awayTeam.name)}
+                  disabled={previousSelections.includes(fixture.awayTeam.id)}
+                >
+                  <img src={fixture.awayTeam.crest} alt={fixture.awayTeam.name} className={`team-logo ${previousSelections.includes(fixture.awayTeam.id) ? 'greyed-out' : ''}`} />
+                  <span className={previousSelections.includes(fixture.awayTeam.id) ? 'greyed-out' : ''}>{fixture.awayTeam.name}</span>
+                </button>
+              </div>
+            ))}
+          </div>
+          <div className="selection-summary">
+            {selectedTeam && <p>You have selected: {selectedTeam.name}</p>}
+            <button type="submit" className="submit-button" disabled={!selectedTeam}>
+              Submit Selection
+            </button>
+          </div>
+        </form>
+      )}
     </div>
   );
 }
