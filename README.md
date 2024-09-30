@@ -72,7 +72,6 @@ Note: Local development will use cached data and may not reflect the most recent
 
 
 
-
 ## Screenshots
 
 <img width="1728" alt="Screenshot 2024-09-13 at 2 00 51 a m" src="https://github.com/user-attachments/assets/ccff5f72-ab67-41e6-b62b-ad3d4b034947">
